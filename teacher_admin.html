@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>선생님 페이지 · Daily English</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4ef;
+  --surface: #ffffff;
+  --surface2: #f0ece4;
+  --border: #e0d9ce;
+  --text: #1a1714;
+  --muted: #8a7f72;
+  --gold: #b8860b;
+  --gold-light: #f5f0e0;
+  --teal: #2a7c6f;
+  --teal-light: #e0f0ed;
+  --coral: #c0392b;
+  --coral-light: #fde8e6;
+  --green: #27ae60;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+header {
+  background: var(--surface); border-bottom: 2px solid var(--text);
+  padding: 16px 32px; display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family: 'Lora', serif; font-size: 1.2rem; }
+.logo span { font-style: italic; color: var(--gold); }
+.teacher-badge {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 1.5px; background: var(--text); color: var(--bg);
+  padding: 3px 10px; border-radius: 2px;
+}
+.nav-tabs {
+  display: flex; margin-left: auto;
+  border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden;
+}
+.nav-tab {
+  padding: 8px 18px; background: transparent; border: none;
+  cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem;
+  color: var(--muted); transition: all 0.15s; border-right: 1.5px solid var(--border);
+}
+.nav-tab:last-child { border-right: none; }
+.nav-tab:hover { background: var(--surface2); color: var(--text); }
+.nav-tab.active { background: var(--text); color: var(--bg); }
+
+.main { max-width: 860px; margin: 0 auto; padding: 36px 24px; }
+.panel { display: none; }
+.panel.active { display: block; }
+.panel-title { font-family: 'Lora', serif; font-size: 1.5rem; margin-bottom: 4px; }
+.panel-sub { font-size: 0.84rem; color: var(--muted); margin-bottom: 28px; line-height: 1.65; }
+
+.card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+.card-title { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 6px; }
+.card-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 16px; line-height: 1.65; }
+
+.field {
+  width: 100%; padding: 10px 14px;
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif; font-size: 0.88rem;
+  outline: none; transition: border-color 0.15s; margin-bottom: 10px;
+}
+.field:focus { border-color: var(--gold); }
+.field::placeholder { color: var(--muted); }
+.field-mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; }
+textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
+.row { display: flex; gap: 10px; }
+
+.btn {
+  padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500;
+  transition: all 0.15s; white-space: nowrap;
+}
+.btn-dark { background: var(--text); color: var(--bg); }
+.btn-dark:hover { background: #333; }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { background: #236358; }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+.btn-outline:hover { border-color: var(--text); color: var(--text); }
+.btn-red { background: transparent; border: 1.5px solid var(--coral); color: var(--coral); }
+.btn-red:hover { background: var(--coral-light); }
+.btn-sm { padding: 6px 14px; font-size: 0.72rem; }
+
+.student-list { display: flex; flex-direction: column; gap: 12px; }
+.student-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s;
+}
+.student-card:hover { border-color: var(--gold); }
+.student-head { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.student-name { font-family: 'Lora', serif; font-size: 1.05rem; }
+.student-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+.student-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.session-strip { border-top: 1px solid var(--border); padding: 10px 20px; display: flex; gap: 6px; flex-wrap: wrap; background: var(--surface2); }
+.session-chip { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; padding: 3px 10px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+
+.add-form { border-top: 1.5px solid var(--border); padding: 20px; background: var(--gold-light); display: none; }
+.add-form.open { display: block; }
+.form-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.parse-hint { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--teal); }
+
+.link-box { border-top: 1.5px solid var(--teal); padding: 16px 20px; background: var(--teal-light); display: none; }
+.link-box.open { display: block; }
+.link-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 1px; color: var(--teal); margin-bottom: 8px; }
+.link-url { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--text); word-break: break-all; line-height: 1.6; background: var(--surface); border: 1px solid var(--border); padding: 10px 14px; border-radius: 6px; margin-bottom: 10px; }
+.link-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--text); color: var(--bg); border-radius: 8px; padding: 12px 24px; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 9999; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-icon { font-size: 3rem; margin-bottom: 12px; }
+
+.warn-box { background: var(--gold-light); border: 1.5px solid var(--gold); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 20px; font-size: 0.84rem; line-height: 1.7; display: none; }
+.warn-box.show { display: block; }
+
+@media(max-width:600px) {
+  header { padding: 12px 16px; flex-wrap: wrap; }
+  .nav-tabs { margin-left: 0; }
+  .main { padding: 20px 14px; }
+  .row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Daily <span>English</span></div>
+  <div class="teacher-badge">TEACHER</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('students',this)">👤 학생 관리</button>
+    <button class="nav-tab" onclick="switchTab('settings',this)">⚙️ 설정</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- STUDENTS -->
+  <div class="panel active" id="panel-students">
+    <div class="panel-title">학생 관리</div>
+    <div class="panel-sub">학생 추가 → 수업 표현 입력 → 링크 생성 → 카톡 전송</div>
+
+    <div class="warn-box" id="settings-warn">
+      ⚠️ 먼저 <strong>설정 탭</strong>에서 Notion API 키와 Database ID를 저장해주세요.
+    </div>
+
+    <div class="card">
+      <div class="card-title">새 학생 추가</div>
+      <div class="row">
+        <input class="field" id="new-name" placeholder="학생 이름 (예: 김지은)" style="margin-bottom:0" />
+        <button class="btn btn-dark" onclick="addStudent()" style="flex-shrink:0">추가</button>
+      </div>
+    </div>
+
+    <div class="student-list" id="student-list">
+      <div class="empty" id="empty-state">
+        <div class="empty-icon">👤</div>
+        아직 학생이 없어요.<br>위에서 추가해보세요!
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="panel" id="panel-settings">
+    <div class="panel-title">설정</div>
+    <div class="panel-sub">한 번만 입력하면 돼요. 이 정보는 선생님 브라우저에만 저장되고 외부로 전송되지 않아요.</div>
+
+    <div class="card">
+      <div class="card-title">🔑 Notion API 키</div>
+      <div class="card-sub">
+        <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--teal)">notion.so/my-integrations</a> → Integration 클릭 → <strong>Internal Integration Secret</strong> 복사<br>
+        <span style="color:var(--coral)">⚠️ 이 키는 절대 카톡이나 채팅에 보내지 마세요!</span>
+      </div>
+      <input class="field field-mono" id="notion-key" type="password" placeholder="secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+
+      <div class="card-title" style="margin-top:20px">🗄️ Notion Database ID</div>
+      <div class="card-sub">Notion 테이블 페이지 URL에서 복사한 32자리 코드예요.</div>
+      <input class="field field-mono" id="notion-db" placeholder="32f404acbb6e809e9d11fbde6aa30c1f" />
+
+      <div class="card-title" style="margin-top:20px">🔗 학생 페이지 URL <span style="font-size:0.75rem;color:var(--muted)">(선택 — 나중에 입력해도 돼요)</span></div>
+      <div class="card-sub">student_review.html을 올린 GitHub Pages 주소예요. 지금은 비워두세요.</div>
+      <input class="field field-mono" id="student-url" placeholder="https://유저명.github.io/레포이름/student_review.html" />
+
+      <button class="btn btn-dark" onclick="saveSettings()" style="width:100%;margin-top:4px">저장</button>
+      <div id="save-msg" style="margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--green)"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💡 GitHub Pages 없이도 쓸 수 있어요</div>
+      <div class="card-sub" style="margin-bottom:0">
+        학생 URL을 비워두면, 링크 생성할 때 표현 데이터가 URL 안에 담겨요.<br>
+        학생이 링크 클릭하면 바로 열려요. 표현이 많으면 링크가 길어지지만 잘 작동해요.<br><br>
+        나중에 학생이 많아지면 그때 GitHub Pages 설정하면 돼요 😊
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let cfg = JSON.parse(localStorage.getItem('der_cfg') || '{}');
+let students = JSON.parse(localStorage.getItem('der_students') || '[]');
+
+function saveCfg() { localStorage.setItem('der_cfg', JSON.stringify(cfg)); }
+function saveStudents() { localStorage.setItem('der_students', JSON.stringify(students)); }
+
+// init
+if (cfg.notionKey) document.getElementById('notion-key').value = cfg.notionKey;
+if (cfg.notionDb) document.getElementById('notion-db').value = cfg.notionDb;
+if (cfg.studentUrl) document.getElementById('student-url').value = cfg.studentUrl;
+checkWarn();
+renderStudents();
+
+function checkWarn() {
+  document.getElementById('settings-warn').classList.toggle('show', !cfg.notionKey || !cfg.notionDb);
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+function saveSettings() {
+  cfg.notionKey = document.getElementById('notion-key').value.trim();
+  cfg.notionDb = document.getElementById('notion-db').value.trim();
+  cfg.studentUrl = document.getElementById('student-url').value.trim();
+  saveCfg(); checkWarn();
+  document.getElementById('save-msg').textContent = '✓ 저장됐어요!';
+  setTimeout(() => document.getElementById('save-msg').textContent = '', 3000);
+  toast('설정 저장 완료 ✓');
+}
+
+// Notion API
+async function notionReq(method, path, body) {
+  const res = await fetch(`https://api.notion.com/v1${path}`, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${cfg.notionKey}`,
+      'Notion-Version': '2022-06-28',
+      'Content-Type': 'application/json'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  return res.json();
+}
+
+async function syncToNotion(s) {
+  if (!cfg.notionKey || !cfg.notionDb) return;
+  try {
+    const sessStr = JSON.stringify(s.sessions);
+    // Notion rich_text max 2000 chars — chunk if needed
+    const chunk = sessStr.substring(0, 1990);
+    const props = {
+      Name: { title: [{ text: { content: s.name } }] },
+      Sessions: { rich_text: [{ text: { content: chunk } }] },
+      StudentId: { rich_text: [{ text: { content: s.id } }] }
+    };
+    if (s.pageId) {
+      await notionReq('PATCH', `/pages/${s.pageId}`, { properties: props });
+    } else {
+      const res = await notionReq('POST', '/pages', { parent: { database_id: cfg.notionDb }, properties: props });
+      if (res.id) { s.pageId = res.id; saveStudents(); }
+    }
+    toast('☁️ Notion 저장 완료');
+  } catch(e) { toast('⚠️ Notion 저장 실패 (로컬 저장됨)'); }
+}
+
+function addStudent() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) return;
+  const s = { id: 'stu_' + Date.now(), name, sessions: [], pageId: null };
+  students.unshift(s);
+  saveStudents();
+  document.getElementById('new-name').value = '';
+  if (cfg.notionKey && cfg.notionDb) syncToNotion(s);
+  renderStudents();
+  toast(`${name} 추가 ✓`);
+}
+
+function deleteStudent(id) {
+  const s = students.find(s => s.id === id);
+  if (!confirm(`"${s.name}" 학생을 삭제할까요?`)) return;
+  students = students.filter(s => s.id !== id);
+  saveStudents(); renderStudents(); toast('삭제됐어요');
+}
+
+function renderStudents() {
+  const list = document.getElementById('student-list');
+  const empty = document.getElementById('empty-state');
+  if (students.length === 0) { list.innerHTML = ''; list.appendChild(empty); empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  list.innerHTML = students.map(s => {
+    const total = s.sessions.reduce((a, b) => a + b.expressions.length, 0);
+    const chips = s.sessions.map(ss => `<span class="session-chip">${ss.date}${ss.name ? ' · ' + ss.name : ''} · ${ss.expressions.length}개</span>`).join('');
+    return `
+    <div class="student-card">
+      <div class="student-head">
+        <div>
+          <div class="student-name">${s.name}</div>
+          <div class="student-meta">수업 ${s.sessions.length}회 · 총 ${total}개 표현</div>
+        </div>
+        <div class="student-btns">
+          <button class="btn btn-teal btn-sm" onclick="toggleForm('${s.id}')">+ 수업 추가</button>
+          <button class="btn btn-outline btn-sm" onclick="genLink('${s.id}')">🔗 링크</button>
+          <button class="btn btn-red btn-sm" onclick="deleteStudent('${s.id}')">삭제</button>
+        </div>
+      </div>
+      ${chips ? `<div class="session-strip">${chips}</div>` : ''}
+      <div class="add-form" id="form-${s.id}">
+        <div class="form-label">새 수업 표현 추가</div>
+        <div class="row" style="margin-bottom:10px">
+          <input class="field" id="fd-${s.id}" value="${new Date().toISOString().split('T')[0]}" placeholder="날짜" style="margin-bottom:0" />
+          <input class="field" id="fn-${s.id}" placeholder="수업 이름 (선택)" style="margin-bottom:0" />
+        </div>
+        <textarea class="field" id="ft-${s.id}" placeholder="저는 날씨에 영향을 많이 받는 사람이에요.&#10;I'm someone who is very affected by the weather.&#10;나는 벼랑끝에 서있는 느낌이야.&#10;I feel like I'm standing on the edge of a cliff."></textarea>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-dark btn-sm" onclick="saveSession('${s.id}')">저장</button>
+          <button class="btn btn-outline btn-sm" onclick="toggleForm('${s.id}')">닫기</button>
+          <span class="parse-hint" id="hint-${s.id}"></span>
+        </div>
+      </div>
+      <div class="link-box" id="lb-${s.id}">
+        <div class="link-label">📱 ${s.name} 학생 전용 링크</div>
+        <div class="link-url" id="lu-${s.id}"></div>
+        <div class="link-btns">
+          <button class="btn btn-teal btn-sm" onclick="copyLink('${s.id}')">📋 링크 복사</button>
+          <button class="btn btn-outline btn-sm" onclick="copyKakao('${s.id}')">💬 카톡 메시지 복사</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  students.forEach(s => {
+    const ta = document.getElementById(`ft-${s.id}`);
+    if (ta) ta.addEventListener('input', () => {
+      const n = parseExprs(ta.value).length;
+      const h = document.getElementById(`hint-${s.id}`);
+      if (h) h.textContent = n > 0 ? `${n}개 인식됨` : '';
+    });
+  });
+}
+
+function toggleForm(id) {
+  document.getElementById(`form-${id}`).classList.toggle('open');
+  document.getElementById(`lb-${id}`).classList.remove('open');
+}
+
+function parseExprs(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const out = [];
+  const isEn = l => /^[A-Z]/.test(l) && /[a-zA-Z]{3,}/.test(l);
+  for (let i = 0; i < lines.length - 1; i++) {
+    if (!isEn(lines[i]) && isEn(lines[i+1])) { out.push({ ko: lines[i], en: lines[i+1] }); i++; }
+  }
+  return out;
+}
+
+async function saveSession(id) {
+  const text = document.getElementById(`ft-${id}`).value.trim();
+  const date = document.getElementById(`fd-${id}`).value || new Date().toISOString().split('T')[0];
+  const name = document.getElementById(`fn-${id}`).value.trim();
+  const exprs = parseExprs(text);
+  if (exprs.length === 0) { alert('표현을 인식하지 못했어요.\n한국어 다음 줄에 영어 형식인지 확인해주세요.'); return; }
+  const s = students.find(s => s.id === id);
+  s.sessions.unshift({ id: 'sess_' + Date.now(), date, name, expressions: exprs });
+  saveStudents();
+  if (cfg.notionKey && cfg.notionDb) await syncToNotion(s);
+  document.getElementById(`form-${id}`).classList.remove('open');
+  document.getElementById(`ft-${id}`).value = '';
+  renderStudents();
+  toast(`✓ ${exprs.length}개 표현 저장!`);
+}
+
+function genLink(id) {
+  const s = students.find(s => s.id === id);
+  const base = (cfg.studentUrl || 'student_review.html').replace(/\/$/, '');
+  const payload = { name: s.name, sessions: s.sessions };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url = `${base}?data=${encoded}`;
+  document.getElementById(`lu-${id}`).textContent = url;
+  document.getElementById(`lb-${id}`).classList.add('open');
+  document.getElementById(`form-${id}`).classList.remove('open');
+  s._link = url;
+}
+
+function copyLink(id) {
+  const url = document.getElementById(`lu-${id}`).textContent;
+  navigator.clipboard.writeText(url).then(() => toast('링크 복사됨 📋'));
+}
+
+function copyKakao(id) {
+  const s = students.find(s => s.id === id);
+  const url = document.getElementById(`lu-${id}`).textContent;
+  const msg = `안녕하세요 ${s.name}님! 😊\n오늘 수업 복습 링크 보내드려요 📚\n\n${url}\n\n매일 5분씩 퀴즈 풀어보세요! 🎯`;
+  navigator.clipboard.writeText(msg).then(() => toast('카톡 메시지 복사됨 💬'));
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

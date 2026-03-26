@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Daily English Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181c27;
+  --surface2: #1e2335;
+  --border: #2a3050;
+  --text: #e8eaf2;
+  --muted: #6b7499;
+  --gold: #f0c060;
+  --gold2: #c89030;
+  --teal: #4ecdc4;
+  --coral: #ff6b6b;
+  --green: #51cf66;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+header {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 14px 20px; display: flex; align-items: center; gap: 10px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family: 'Lora', serif; font-size: 1rem; color: var(--gold); }
+.logo span { font-style: italic; }
+.student-pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--muted); padding: 4px 12px; border-radius: 20px; margin-left: auto;
+}
+
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--surface); border-top: 1px solid var(--border);
+  display: flex; z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 10px 4px; cursor: pointer; background: none; border: none;
+  color: var(--muted); transition: color 0.15s;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.bnav.active { color: var(--gold); }
+.bnav-icon { font-size: 1.25rem; }
+.bnav-label { font-size: 0.62rem; }
+
+main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SESSION PILLS */
+.pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
+.pill {
+  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+  transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+}
+.pill.active { background: var(--gold); color: #111; border-color: var(--gold); }
+
+/* PLAY BAR */
+.play-bar {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.play-bar-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--muted); flex: 1; }
+.prog-wrap { flex: 2; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--teal); width: 0%; transition: width 0.3s; }
+
+.btn {
+  padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 500;
+  transition: all 0.15s; white-space: nowrap;
+}
+.btn-teal { background: var(--teal); color: #111; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.btn-gold { background: var(--gold); color: #111; }
+.btn-sm { padding: 6px 12px; font-size: 0.68rem; }
+
+/* EXPR CARDS */
+.expr-list { display: flex; flex-direction: column; gap: 10px; }
+.expr-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  transition: border-color 0.2s;
+}
+.expr-card.playing { border-color: var(--teal); }
+.expr-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-bottom: 6px; }
+.expr-ko { font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; line-height: 1.65; }
+.expr-en { font-family: 'Lora', serif; font-size: 1rem; color: var(--text); line-height: 1.65; margin-bottom: 12px; }
+.speed-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.spd {
+  padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+  transition: all 0.15s; -webkit-appearance: none;
+}
+.spd:active { transform: scale(0.95); }
+.spd.on { background: var(--teal); color: #111; border-color: var(--teal); }
+
+/* QUIZ */
+.quiz-setup {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px 20px; text-align: center; margin-bottom: 16px;
+}
+.quiz-setup h2 { font-family: 'Lora', serif; color: var(--gold); margin-bottom: 8px; }
+.quiz-setup p { font-size: 0.84rem; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+.qtype-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+.qtype-btn {
+  padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; transition: all 0.15s;
+}
+.qtype-btn.active { background: var(--gold); color: #111; border-color: var(--gold); }
+
+.quiz-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px 18px;
+  animation: fadeUp 0.25s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.quiz-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.quiz-num-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+.qdots { display: flex; gap: 4px; }
+.qdot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+.qdot.done { background: var(--green); }
+.qdot.cur { background: var(--gold); }
+.qtypelbl {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.8px;
+  background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+  padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px;
+}
+.quiz-q { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--text); line-height: 1.65; margin-bottom: 6px; }
+.answers { display: flex; flex-direction: column; gap: 8px; margin: 16px 0 10px; }
+.ans-btn {
+  padding: 13px 14px; background: var(--surface2);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  cursor: pointer; font-family: 'Lora', serif; font-size: 0.88rem;
+  color: var(--text); text-align: left; line-height: 1.5;
+  transition: all 0.15s; width: 100%; -webkit-appearance: none;
+}
+.ans-btn:active:not(:disabled) { transform: scale(0.98); }
+.ans-btn.correct { border-color: var(--green); background: rgba(81,207,102,0.12); color: var(--green); }
+.ans-btn.wrong { border-color: var(--coral); background: rgba(255,107,107,0.12); color: var(--coral); }
+.ans-btn:disabled { cursor: default; }
+.qfeedback { padding: 11px 14px; border-radius: 8px; font-size: 0.84rem; line-height: 1.6; display: none; }
+.qfeedback.show { display: block; }
+.qfeedback.correct { background: rgba(81,207,102,0.1); border: 1px solid var(--green); color: var(--green); }
+.qfeedback.wrong { background: rgba(255,107,107,0.1); border: 1px solid var(--coral); color: var(--coral); }
+.next-wrap { margin-top: 14px; display: none; }
+
+.result-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 36px 20px; text-align: center;
+  animation: fadeUp 0.3s ease;
+}
+.res-stars { font-size: 2rem; margin-bottom: 10px; }
+.res-score { font-family: 'Lora', serif; font-size: 3rem; color: var(--gold); }
+.res-msg { font-size: 0.9rem; color: var(--muted); margin: 10px 0 20px; }
+.streak-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #111; padding: 7px 18px; border-radius: 20px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500; margin-bottom: 20px;
+}
+
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; }
+.dots { display: flex; gap: 6px; }
+.dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: dp 1.2s infinite ease-in-out; }
+.dots span:nth-child(2){animation-delay:.2s} .dots span:nth-child(3){animation-delay:.4s}
+@keyframes dp{0%,80%,100%{transform:scale(0.5);opacity:0.3}40%{transform:scale(1);opacity:1}}
+.dots-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Daily <span>English</span></div>
+  <div class="student-pill" id="stu-pill">로딩 중...</div>
+</header>
+
+<main>
+  <div class="loading-screen" id="loading">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="dots-label">표현을 불러오고 있어요...</div>
+  </div>
+
+  <!-- LEARN -->
+  <div class="panel" id="panel-learn">
+    <div class="pills" id="sess-pills"></div>
+    <div class="play-bar">
+      <span class="play-bar-label">전체 듣기</span>
+      <div class="prog-wrap"><div class="prog-fill" id="prog"></div></div>
+      <button class="btn btn-teal btn-sm" onclick="playAll()">▶ 전체</button>
+      <button class="btn btn-outline btn-sm" onclick="stopAll()">■</button>
+    </div>
+    <div class="expr-list" id="expr-list"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="panel" id="panel-quiz">
+    <div id="quiz-setup-wrap">
+      <div class="quiz-setup">
+        <div style="font-size:2rem;margin-bottom:10px">🎯</div>
+        <h2>복습 퀴즈</h2>
+        <p id="quiz-desc">불러오는 중...</p>
+        <div class="qtype-row">
+          <button class="qtype-btn active" onclick="setQT(this,'ko2en')">한→영</button>
+          <button class="qtype-btn" onclick="setQT(this,'en2ko')">영→한</button>
+          <button class="qtype-btn" onclick="setQT(this,'mixed')">혼합</button>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:16px">
+          <span style="font-size:0.82rem;color:var(--muted)">문제 수:</span>
+          <select id="qcnt" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;outline:none;">
+            <option value="5">5문제</option>
+            <option value="7">7문제</option>
+            <option value="10">10문제</option>
+          </select>
+        </div>
+        <button class="btn btn-gold" onclick="startQuiz()" style="padding:12px 28px;font-size:0.85rem">퀴즈 시작 →</button>
+      </div>
+      <div id="streak-wrap" style="text-align:center"></div>
+    </div>
+    <div id="quiz-play" style="display:none"></div>
+    <div id="quiz-end" style="display:none"></div>
+  </div>
+</main>
+
+<div class="bottom-nav">
+  <button class="bnav active" onclick="switchTab('learn',this)">
+    <div class="bnav-icon">📖</div><div class="bnav-label">학습</div>
+  </button>
+  <button class="bnav" onclick="switchTab('quiz',this)">
+    <div class="bnav-icon">✏️</div><div class="bnav-label">퀴즈</div>
+  </button>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+let data = null; // { name, sessions }
+let curSessIdx = 0;
+let qType = 'ko2en';
+let qQs = [], qIdx = 0, qScore = 0;
+let playActive = false;
+
+const sName = data?.name || params.get('student') || '학생';
+let stats = JSON.parse(localStorage.getItem(`ders_${sName}`) || '{"streak":0,"lastDate":""}');
+function saveStats() { localStorage.setItem(`ders_${sName}`, JSON.stringify(stats)); }
+
+// ── LOAD ─────────────────────────────────────────────
+async function load() {
+  try {
+    const raw = params.get('data');
+    if (raw) {
+      data = JSON.parse(decodeURIComponent(escape(atob(raw))));
+    } else {
+      // No data in URL — show error
+      throw new Error('no data');
+    }
+    init();
+  } catch(e) {
+    document.getElementById('loading').innerHTML = `
+      <div style="text-align:center;padding:40px 20px;color:var(--muted)">
+        <div style="font-size:3rem;margin-bottom:12px">⚠️</div>
+        <div>링크가 올바르지 않아요.</div>
+        <div style="font-size:0.8rem;margin-top:8px">선생님께 링크를 다시 받아보세요.</div>
+      </div>`;
+  }
+}
+
+function init() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('stu-pill').textContent = data.name;
+  document.getElementById('panel-learn').classList.add('active');
+  renderPills();
+  renderExprs(0);
+  updateQuizDesc();
+  renderStreakBadge();
+  window.speechSynthesis.getVoices();
+}
+
+// ── TABS ─────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── LEARN ─────────────────────────────────────────────
+function renderPills() {
+  document.getElementById('sess-pills').innerHTML = data.sessions.map((s, i) =>
+    `<button class="pill ${i===0?'active':''}" onclick="selSess(${i},this)">${s.date}${s.name?' · '+s.name:''}</button>`
+  ).join('');
+}
+
+function selSess(i, btn) {
+  curSessIdx = i;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderExprs(i);
+}
+
+function renderExprs(i) {
+  const sess = data.sessions[i];
+  document.getElementById('expr-list').innerHTML = sess.expressions.map((e, j) => `
+    <div class="expr-card" id="ec-${j}">
+      <div class="expr-num">${j+1} / ${sess.expressions.length}</div>
+      <div class="expr-ko">${e.ko}</div>
+      <div class="expr-en">${e.en}</div>
+      <div class="speed-btns">
+        <button class="spd" onclick="speak(${j}, 0.65, this)">🐢 느리게</button>
+        <button class="spd" onclick="speak(${j}, 1.0, this)">▶ 정속도</button>
+        <button class="spd" onclick="speak(${j}, 1.35, this)">⚡ 빠르게</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── TTS ──────────────────────────────────────────────
+function getVoice() {
+  const vs = window.speechSynthesis.getVoices();
+  return vs.find(v => v.lang==='en-US' && v.name.includes('Samantha'))
+    || vs.find(v => v.lang==='en-US' && !v.name.includes('Google'))
+    || vs.find(v => v.lang.startsWith('en'));
+}
+
+function speak(idx, rate, btn) {
+  window.speechSynthesis.cancel();
+  const sess = data.sessions[curSessIdx];
+  const text = sess.expressions[idx].en;
+  document.querySelectorAll('.expr-card').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
+  document.getElementById('ec-' + idx)?.classList.add('playing');
+  if (btn) btn.classList.add('on');
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = rate;
+  const v = getVoice(); if (v) u.voice = v;
+  u.onend = () => {
+    document.getElementById('ec-' + idx)?.classList.remove('playing');
+    if (btn) btn.classList.remove('on');
+    if (playActive) playNext(idx + 1);
+  };
+  window.speechSynthesis.speak(u);
+}
+
+function speakText(text, rate) {
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = rate;
+  const v = getVoice(); if (v) u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+
+function playAll() { playActive = true; setProgress(0); speak(0, 1.0, null); }
+function playNext(idx) {
+  const total = data.sessions[curSessIdx].expressions.length;
+  if (!playActive || idx >= total) { playActive = false; setProgress(0); return; }
+  setProgress(idx / total);
+  setTimeout(() => speak(idx, 1.0, null), 700);
+}
+function stopAll() {
+  playActive = false; window.speechSynthesis.cancel();
+  document.querySelectorAll('.expr-card').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
+  setProgress(0);
+}
+function setProgress(r) { document.getElementById('prog').style.width = (r * 100) + '%'; }
+
+// ── QUIZ ─────────────────────────────────────────────
+function allExprs() { return data.sessions.flatMap(s => s.expressions); }
+function updateQuizDesc() {
+  const n = allExprs().length;
+  document.getElementById('quiz-desc').textContent = `총 ${n}개 표현으로 퀴즈를 풀어보세요!`;
+}
+function setQT(btn, type) {
+  qType = type;
+  document.querySelectorAll('.qtype-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function renderStreakBadge() {
+  const el = document.getElementById('streak-wrap');
+  el.innerHTML = stats.streak > 1 ? `<div class="streak-badge">🔥 ${stats.streak}일 연속 복습 중!</div>` : '';
+}
+
+function startQuiz() {
+  const all = allExprs();
+  if (all.length < 4) { alert('퀴즈를 위해 최소 4개 이상의 표현이 필요해요!'); return; }
+  const cnt = parseInt(document.getElementById('qcnt').value);
+  const shuffled = [...all].sort(() => Math.random() - 0.5).slice(0, Math.min(cnt, all.length));
+  qQs = shuffled.map(q => {
+    const t = qType === 'mixed' ? (Math.random() > 0.5 ? 'ko2en' : 'en2ko') : qType;
+    return { ...q, t };
+  });
+  qIdx = 0; qScore = 0;
+  document.getElementById('quiz-setup-wrap').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'none';
+  document.getElementById('quiz-play').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  const q = qQs[qIdx];
+  const all = allExprs();
+  const total = qQs.length;
+  const wrongs = all.filter(e => e.en !== q.en).sort(() => Math.random() - 0.5).slice(0, 3);
+  let opts, question, label;
+  if (q.t === 'ko2en') {
+    question = q.ko; label = '한국어 → 영어';
+    opts = [{text: q.en, ok: true}, ...wrongs.map(w => ({text: w.en, ok: false}))].sort(() => Math.random() - 0.5);
+  } else {
+    question = q.en; label = '영어 → 한국어';
+    opts = [{text: q.ko, ok: true}, ...wrongs.map(w => ({text: w.ko, ok: false}))].sort(() => Math.random() - 0.5);
+  }
+  const correct = q.t === 'ko2en' ? q.en : q.ko;
+  const dots = qQs.map((_, i) => `<div class="qdot ${i<qIdx?'done':i===qIdx?'cur':''}"></div>`).join('');
+
+  document.getElementById('quiz-play').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-top">
+        <div class="quiz-num-lbl">${qIdx+1} / ${total}</div>
+        <div class="qdots">${dots}</div>
+      </div>
+      <div class="qtypelbl">${label}</div>
+      <div class="quiz-q">${question}</div>
+      ${q.t==='ko2en'?`<div style="margin-bottom:12px"><button class="spd" onclick="speakText('${q.en.replace(/'/g,"\\'")}', 0.85)">🔊 발음 듣기</button></div>`:''}
+      <div class="answers">
+        ${opts.map(o=>`<button class="ans-btn" onclick="pick(this,${o.ok},'${correct.replace(/'/g,"\\'")}','${q.en.replace(/'/g,"\\'")}')">
+          ${o.text}</button>`).join('')}
+      </div>
+      <div class="qfeedback" id="qfb"></div>
+      <div class="next-wrap" id="nxt">
+        <button class="btn btn-gold" onclick="nextQ()" style="width:100%;padding:13px">
+          ${qIdx+1<total?'다음 →':'결과 보기 →'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function pick(btn, ok, correct, enText) {
+  document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+  btn.classList.add(ok ? 'correct' : 'wrong');
+  if (!ok) document.querySelectorAll('.ans-btn').forEach(b => { if (b.textContent.trim()===correct) b.classList.add('correct'); });
+  const fb = document.getElementById('qfb');
+  fb.classList.add('show', ok ? 'correct' : 'wrong');
+  if (ok) { qScore++; fb.textContent = '✓ 정답!'; speakText(enText, 0.9); }
+  else fb.innerHTML = `✗ 정답: <strong>${correct}</strong>`;
+  document.getElementById('nxt').style.display = 'block';
+}
+
+function nextQ() { qIdx++; qIdx >= qQs.length ? showResult() : renderQ(); }
+
+function showResult() {
+  const total = qQs.length;
+  const pct = Math.round((qScore / total) * 100);
+  const stars = pct===100?'⭐⭐⭐':pct>=70?'⭐⭐':'⭐';
+  const msg = pct===100?'완벽해요! 🎉':pct>=70?'잘했어요! 조금만 더!':'다시 복습해봐요!';
+  const today = new Date().toISOString().split('T')[0];
+  if (stats.lastDate !== today) {
+    const prev = new Date(Date.now()-86400000).toISOString().split('T')[0];
+    stats.streak = stats.lastDate===prev ? stats.streak+1 : 1;
+    stats.lastDate = today; saveStats();
+  }
+  document.getElementById('quiz-play').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'block';
+  document.getElementById('quiz-end').innerHTML = `
+    <div class="result-card">
+      <div class="res-stars">${stars}</div>
+      <div class="res-score">${qScore}<span style="font-size:1.5rem;color:var(--muted)">/${total}</span></div>
+      <div class="res-msg">${msg}</div>
+      ${stats.streak>1?`<div class="streak-badge">🔥 ${stats.streak}일 연속!</div>`:''}
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="startQuiz()">다시 풀기</button>
+        <button class="btn btn-outline" onclick="backSetup()">설정으로</button>
+      </div>
+    </div>`;
+}
+
+function backSetup() {
+  document.getElementById('quiz-end').style.display = 'none';
+  document.getElementById('quiz-setup-wrap').style.display = 'block';
+  renderStreakBadge();
+}
+
+window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+load();
+</script>
+</body>
+</html>
