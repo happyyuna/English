@@ -408,10 +408,11 @@ async function load() {
     } else throw new Error('no data');
     init();
   } catch(e) {
+    console.error('Load error:', e);
     document.getElementById('loading').innerHTML = `
       <div style="text-align:center;padding:40px 20px;color:var(--muted)">
         <div style="font-size:3rem;margin-bottom:12px">⚠️</div>
-        <div style="font-weight:700">링크가 올바르지 않아요.</div>
+        <div style="font-weight:700">오류: ${e.message}</div>
         <div style="font-size:0.8rem;margin-top:8px">선생님께 링크를 다시 받아보세요.</div>
       </div>`;
   }
@@ -566,4 +567,197 @@ function startQuiz() {
   qIdx = 0; qScore = 0;
   document.getElementById('quiz-setup-wrap').style.display = 'none';
   document.getElementById('quiz-end').style.display = 'none';
-  document.getE
+  document.getElementById('quiz-play').style.display = 'block';
+  renderWordOrderQ();
+}
+
+function renderWordOrderQ() {
+  const q = qQs[qIdx];
+  const total = qQs.length;
+  const pct = (qIdx / total) * 100;
+  answerWords = [];
+  wordChips = makeWordChips(q.en);
+
+  // Easy mode: fewer words (split into chunks)
+  // Hard mode: all individual words
+  let chips = wordChips;
+
+  document.getElementById('quiz-play').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="quiz-meta">
+        <div class="quiz-num-lbl">${qIdx+1} / ${total}</div>
+        <div class="quiz-type-tag">단어 순서 맞추기</div>
+      </div>
+
+      <div class="quiz-instruction">한국어를 보고 영어 문장을 만들어보세요!</div>
+      <div class="quiz-ko">${q.ko}</div>
+
+      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:8px">
+        👆 단어를 탭해서 문장 완성하기
+      </div>
+
+      <div class="answer-area" id="answer-area">
+        <span class="answer-placeholder" id="answer-placeholder">여기에 단어를 놓아주세요</span>
+      </div>
+
+      <div class="word-bank" id="word-bank">
+        ${chips.map((w, i) => `
+          <button class="word-chip" id="chip-${i}" onclick="addWord('${w.replace(/'/g,"\\'")}', ${i})">
+            ${w}
+          </button>`).join('')}
+      </div>
+
+      <button class="quiz-check-btn" id="check-btn" onclick="checkAnswer()" disabled>
+        정답 확인 ✓
+      </button>
+      <button class="quiz-reset-btn" onclick="resetAnswer()">↺ 다시 시작</button>
+
+      <div class="quiz-feedback" id="qfb"></div>
+      <div class="next-wrap" id="nxt">
+        <button class="next-btn" onclick="nextQ()">
+          ${qIdx+1<total?'다음 문제 →':'결과 보기 →'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function addWord(word, chipIdx) {
+  answerWords.push({ word, chipIdx });
+  updateAnswerDisplay();
+  document.getElementById(`chip-${chipIdx}`).classList.add('used');
+  document.getElementById('check-btn').disabled = false;
+  document.getElementById('answer-placeholder').style.display = 'none';
+  document.getElementById('answer-area').classList.add('has-words');
+}
+
+function removeWord(answerIdx) {
+  const removed = answerWords[answerIdx];
+  document.getElementById(`chip-${removed.chipIdx}`).classList.remove('used');
+  answerWords.splice(answerIdx, 1);
+  updateAnswerDisplay();
+  if (answerWords.length === 0) {
+    document.getElementById('check-btn').disabled = true;
+    document.getElementById('answer-placeholder').style.display = 'inline';
+    document.getElementById('answer-area').classList.remove('has-words');
+  }
+}
+
+function updateAnswerDisplay() {
+  const area = document.getElementById('answer-area');
+  const placeholder = document.getElementById('answer-placeholder');
+  const existingWords = area.querySelectorAll('.answer-word');
+  existingWords.forEach(w => w.remove());
+  answerWords.forEach((item, i) => {
+    const el = document.createElement('button');
+    el.className = 'answer-word';
+    el.innerHTML = `${item.word} <span class="remove">✕</span>`;
+    el.onclick = () => removeWord(i);
+    area.appendChild(el);
+  });
+}
+
+function resetAnswer() {
+  answerWords = [];
+  document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('used'));
+  const area = document.getElementById('answer-area');
+  area.querySelectorAll('.answer-word').forEach(w => w.remove());
+  area.classList.remove('has-words', 'correct', 'wrong');
+  document.getElementById('answer-placeholder').style.display = 'inline';
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('qfb').className = 'quiz-feedback';
+  document.getElementById('nxt').style.display = 'none';
+}
+
+function checkAnswer() {
+  const q = qQs[qIdx];
+  const userAnswer = answerWords.map(w => w.word).join(' ');
+  const correct = q.en;
+  const isCorrect = userAnswer.toLowerCase().replace(/[.,!?]/g,'').trim() ===
+                    correct.toLowerCase().replace(/[.,!?]/g,'').trim();
+
+  const area = document.getElementById('answer-area');
+  const fb = document.getElementById('qfb');
+
+  // Disable chips and check btn
+  document.querySelectorAll('.word-chip').forEach(c => c.style.pointerEvents = 'none');
+  document.querySelectorAll('.answer-word').forEach(w => w.style.pointerEvents = 'none');
+  document.getElementById('check-btn').disabled = true;
+  document.getElementById('check-btn').style.display = 'none';
+  document.querySelector('.quiz-reset-btn').style.display = 'none';
+
+  if (isCorrect) {
+    qScore++;
+    area.classList.remove('has-words'); area.classList.add('correct');
+    fb.className = 'quiz-feedback show correct';
+    fb.innerHTML = '✓ 정답이에요! 🎉';
+    speakText(correct, 0.9);
+  } else {
+    area.classList.remove('has-words'); area.classList.add('wrong');
+    fb.className = 'quiz-feedback show wrong';
+    fb.innerHTML = `✗ 아쉬워요!<br><strong>정답: ${correct}</strong>`;
+    speakText(correct, 0.85);
+  }
+
+  document.getElementById('nxt').style.display = 'block';
+}
+
+function nextQ() {
+  qIdx++;
+  if (qIdx >= qQs.length) showResult();
+  else renderWordOrderQ();
+}
+
+function showResult() {
+  const total = qQs.length;
+  const pct = Math.round((qScore / total) * 100);
+  const emoji = pct===100?'🏆':pct>=70?'🎉':pct>=50?'😊':'💪';
+  const msg = pct===100?'완벽해요! 모두 맞혔어요!':pct>=70?'잘했어요! 조금만 더 연습해요.':pct>=50?'절반 이상 맞혔어요!':'다시 한번 도전해봐요!';
+
+  // Update streak
+  loadStats();
+  const today = new Date().toISOString().split('T')[0];
+  if (stats.lastDate !== today) {
+    const prev = new Date(Date.now()-86400000).toISOString().split('T')[0];
+    stats.streak = stats.lastDate===prev ? stats.streak+1 : 1;
+    stats.lastDate = today;
+    stats.total = (stats.total || 0) + qScore;
+    saveStats();
+  }
+
+  document.getElementById('quiz-play').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'block';
+  document.getElementById('quiz-end').innerHTML = `
+    <div class="result-card">
+      <div class="result-emoji">${emoji}</div>
+      <div class="result-score">${qScore}<span class="result-total">/${total}</span></div>
+      <div style="font-size:0.8rem;color:var(--muted);margin:4px 0 8px;font-weight:600">${pct}% 정답</div>
+      <div class="result-msg">${msg}</div>
+      ${stats.streak>1?`
+        <div class="streak-card" style="margin:0 auto 20px;max-width:240px">
+          <div class="streak-icon">🔥</div>
+          <div>
+            <div class="streak-text">${stats.streak}일 연속!</div>
+            <div class="streak-sub">꾸준함이 실력이에요 💪</div>
+          </div>
+        </div>`:''}
+      <div class="result-btns">
+        <button class="btn btn-blue" onclick="startQuiz()">다시 풀기</button>
+        <button class="btn btn-outline" onclick="backSetup()">설정으로</button>
+      </div>
+    </div>`;
+}
+
+function backSetup() {
+  document.getElementById('quiz-end').style.display = 'none';
+  document.getElementById('quiz-setup-wrap').style.display = 'block';
+  renderStreak();
+}
+
+window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+load();
+</script>
+</body>
+</html>
