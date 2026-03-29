@@ -32,20 +32,9 @@ header {
 }
 .logo { font-family: 'Lora', serif; font-size: 1.2rem; }
 .logo span { font-style: italic; color: var(--gold); }
-.teacher-badge {
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-  letter-spacing: 1.5px; background: var(--text); color: var(--bg);
-  padding: 3px 10px; border-radius: 2px;
-}
-.nav-tabs {
-  display: flex; margin-left: auto;
-  border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden;
-}
-.nav-tab {
-  padding: 8px 18px; background: transparent; border: none;
-  cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem;
-  color: var(--muted); transition: all 0.15s; border-right: 1.5px solid var(--border);
-}
+.teacher-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 1.5px; background: var(--text); color: var(--bg); padding: 3px 10px; border-radius: 2px; }
+.nav-tabs { display: flex; margin-left: auto; border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; }
+.nav-tab { padding: 8px 18px; background: transparent; border: none; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; color: var(--muted); transition: all 0.15s; border-right: 1.5px solid var(--border); }
 .nav-tab:last-child { border-right: none; }
 .nav-tab:hover { background: var(--surface2); color: var(--text); }
 .nav-tab.active { background: var(--text); color: var(--bg); }
@@ -60,24 +49,14 @@ header {
 .card-title { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 6px; }
 .card-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 16px; line-height: 1.65; }
 
-.field {
-  width: 100%; padding: 10px 14px;
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 8px; color: var(--text);
-  font-family: 'Noto Sans KR', sans-serif; font-size: 0.88rem;
-  outline: none; transition: border-color 0.15s; margin-bottom: 10px;
-}
+.field { width: 100%; padding: 10px 14px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.15s; margin-bottom: 10px; }
 .field:focus { border-color: var(--gold); }
 .field::placeholder { color: var(--muted); }
 .field-mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; }
 textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
 .row { display: flex; gap: 10px; }
 
-.btn {
-  padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500;
-  transition: all 0.15s; white-space: nowrap;
-}
+.btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
 .btn-dark { background: var(--text); color: var(--bg); }
 .btn-dark:hover { background: #333; }
 .btn-teal { background: var(--teal); color: #fff; }
@@ -89,10 +68,7 @@ textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
 .btn-sm { padding: 6px 14px; font-size: 0.72rem; }
 
 .student-list { display: flex; flex-direction: column; gap: 12px; }
-.student-card {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s;
-}
+.student-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s; }
 .student-card:hover { border-color: var(--gold); }
 .student-head { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .student-name { font-family: 'Lora', serif; font-size: 1.05rem; }
@@ -112,13 +88,15 @@ textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
 .link-url { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--text); word-break: break-all; line-height: 1.6; background: var(--surface); border: 1px solid var(--border); padding: 10px 14px; border-radius: 6px; margin-bottom: 10px; }
 .link-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 
+.status-ok { color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; }
+.status-fail { color: var(--coral); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; }
+
 .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--text); color: var(--bg); border-radius: 8px; padding: 12px 24px; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 9999; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
 .empty-icon { font-size: 3rem; margin-bottom: 12px; }
 
-.warn-box { background: var(--gold-light); border: 1.5px solid var(--gold); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 20px; font-size: 0.84rem; line-height: 1.7; display: none; }
-.warn-box.show { display: block; }
+.info-box { background: var(--teal-light); border: 1.5px solid var(--teal); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; font-size: 0.84rem; line-height: 1.7; }
 
 @media(max-width:600px) {
   header { padding: 12px 16px; flex-wrap: wrap; }
@@ -146,10 +124,6 @@ textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
     <div class="panel-title">학생 관리</div>
     <div class="panel-sub">학생 추가 → 수업 표현 입력 → 링크 생성 → 카톡 전송</div>
 
-    <div class="warn-box" id="settings-warn">
-      ⚠️ 먼저 <strong>설정 탭</strong>에서 Notion API 키와 Database ID를 저장해주세요.
-    </div>
-
     <div class="card">
       <div class="card-title">새 학생 추가</div>
       <div class="row">
@@ -169,35 +143,26 @@ textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
   <!-- SETTINGS -->
   <div class="panel" id="panel-settings">
     <div class="panel-title">설정</div>
-    <div class="panel-sub">한 번만 입력하면 돼요. 이 정보는 선생님 브라우저에만 저장되고 외부로 전송되지 않아요.</div>
+    <div class="panel-sub">JSONBin.io를 사용해서 학생 데이터를 저장해요. 완전 무료예요!</div>
 
-    <div class="card">
-      <div class="card-title">🔑 Notion API 키</div>
-      <div class="card-sub">
-        <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--teal)">notion.so/my-integrations</a> → Integration 클릭 → <strong>Internal Integration Secret</strong> 복사<br>
-        <span style="color:var(--coral)">⚠️ 이 키는 절대 카톡이나 채팅에 보내지 마세요!</span>
-      </div>
-      <input class="field field-mono" id="notion-key" type="password" placeholder="secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-
-      <div class="card-title" style="margin-top:20px">🗄️ Notion Database ID</div>
-      <div class="card-sub">Notion 테이블 페이지 URL에서 복사한 32자리 코드예요.</div>
-      <input class="field field-mono" id="notion-db" placeholder="32f404acbb6e809e9d11fbde6aa30c1f" />
-
-      <div class="card-title" style="margin-top:20px">🔗 학생 페이지 URL <span style="font-size:0.75rem;color:var(--muted)">(선택 — 나중에 입력해도 돼요)</span></div>
-      <div class="card-sub">student_review.html을 올린 GitHub Pages 주소예요. 지금은 비워두세요.</div>
-      <input class="field field-mono" id="student-url" placeholder="https://유저명.github.io/레포이름/student_review.html" />
-
-      <button class="btn btn-dark" onclick="saveSettings()" style="width:100%;margin-top:4px">저장</button>
-      <div id="save-msg" style="margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--green)"></div>
+    <div class="info-box">
+      📌 <strong>JSONBin API 키 발급 방법</strong><br>
+      1. <a href="https://jsonbin.io" target="_blank" style="color:var(--teal)">jsonbin.io</a> 접속 → 구글로 가입<br>
+      2. 로그인 후 우측 상단 <strong>API Keys</strong> 클릭<br>
+      3. <strong>X-Master-Key</strong> 복사 → 아래에 붙여넣기<br>
+      ⚠️ 이 키는 여기에만 입력하세요. 카톡이나 채팅에 보내지 마세요!
     </div>
 
     <div class="card">
-      <div class="card-title">💡 GitHub Pages 없이도 쓸 수 있어요</div>
-      <div class="card-sub" style="margin-bottom:0">
-        학생 URL을 비워두면, 링크 생성할 때 표현 데이터가 URL 안에 담겨요.<br>
-        학생이 링크 클릭하면 바로 열려요. 표현이 많으면 링크가 길어지지만 잘 작동해요.<br><br>
-        나중에 학생이 많아지면 그때 GitHub Pages 설정하면 돼요 😊
-      </div>
+      <div class="card-title">🔑 JSONBin API 키</div>
+      <input class="field field-mono" id="jb-key" type="password" placeholder="$2a$10$..." />
+
+      <div class="card-title" style="margin-top:20px">🔗 학생 페이지 URL</div>
+      <div class="card-sub">GitHub Pages에 올린 student_review.html 주소예요.</div>
+      <input class="field field-mono" id="student-url" placeholder="https://happyyuna.github.io/English/student_review.html" />
+
+      <button class="btn btn-dark" onclick="saveSettings()" style="width:100%;margin-top:4px">저장</button>
+      <div id="save-msg" style="margin-top:10px"></div>
     </div>
   </div>
 
@@ -206,22 +171,17 @@ textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
 <div class="toast" id="toast"></div>
 
 <script>
-let cfg = JSON.parse(localStorage.getItem('der_cfg') || '{}');
-let students = JSON.parse(localStorage.getItem('der_students') || '[]');
+let cfg = JSON.parse(localStorage.getItem('der_cfg2') || '{}');
+let students = JSON.parse(localStorage.getItem('der_students2') || '[]');
 
-function saveCfg() { localStorage.setItem('der_cfg', JSON.stringify(cfg)); }
-function saveStudents() { localStorage.setItem('der_students', JSON.stringify(students)); }
+function saveCfg() { localStorage.setItem('der_cfg2', JSON.stringify(cfg)); }
+function saveStudents() { localStorage.setItem('der_students2', JSON.stringify(students)); }
 
 // init
-if (cfg.notionKey) document.getElementById('notion-key').value = cfg.notionKey;
-if (cfg.notionDb) document.getElementById('notion-db').value = cfg.notionDb;
+if (cfg.jbKey) document.getElementById('jb-key').value = cfg.jbKey;
 if (cfg.studentUrl) document.getElementById('student-url').value = cfg.studentUrl;
-checkWarn();
+else document.getElementById('student-url').value = 'https://happyyuna.github.io/English/student_review.html';
 renderStudents();
-
-function checkWarn() {
-  document.getElementById('settings-warn').classList.toggle('show', !cfg.notionKey || !cfg.notionDb);
-}
 
 function switchTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -231,58 +191,57 @@ function switchTab(name, el) {
 }
 
 function saveSettings() {
-  cfg.notionKey = document.getElementById('notion-key').value.trim();
-  cfg.notionDb = document.getElementById('notion-db').value.trim();
+  cfg.jbKey = document.getElementById('jb-key').value.trim();
   cfg.studentUrl = document.getElementById('student-url').value.trim();
-  saveCfg(); checkWarn();
-  document.getElementById('save-msg').textContent = '✓ 저장됐어요!';
-  setTimeout(() => document.getElementById('save-msg').textContent = '', 3000);
+  saveCfg();
+  document.getElementById('save-msg').innerHTML = '<span class="status-ok">✓ 저장됐어요!</span>';
+  setTimeout(() => document.getElementById('save-msg').innerHTML = '', 3000);
   toast('설정 저장 완료 ✓');
 }
 
-// Notion API
-async function notionReq(method, path, body) {
-  const res = await fetch(`https://api.notion.com/v1${path}`, {
-    method,
-    headers: {
-      'Authorization': `Bearer ${cfg.notionKey}`,
-      'Notion-Version': '2022-06-28',
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  return res.json();
-}
-
-async function syncToNotion(s) {
-  if (!cfg.notionKey || !cfg.notionDb) return;
+// JSONBin API
+async function jbSave(student) {
+  if (!cfg.jbKey) return null;
   try {
-    const sessStr = JSON.stringify(s.sessions);
-    // Notion rich_text max 2000 chars — chunk if needed
-    const chunk = sessStr.substring(0, 1990);
-    const props = {
-      Name: { title: [{ text: { content: s.name } }] },
-      Sessions: { rich_text: [{ text: { content: chunk } }] },
-      StudentId: { rich_text: [{ text: { content: s.id } }] }
-    };
-    if (s.pageId) {
-      await notionReq('PATCH', `/pages/${s.pageId}`, { properties: props });
+    const payload = { name: student.name, sessions: student.sessions };
+    if (student.binId) {
+      // Update existing bin
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${student.binId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': cfg.jbKey },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.metadata) { toast('☁️ 클라우드 저장 완료!'); return student.binId; }
     } else {
-      const res = await notionReq('POST', '/pages', { parent: { database_id: cfg.notionDb }, properties: props });
-      if (res.id) { s.pageId = res.id; saveStudents(); }
+      // Create new bin
+      const res = await fetch('https://api.jsonbin.io/v3/b', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': cfg.jbKey,
+          'X-Bin-Name': `DailyEnglish_${student.name}`,
+          'X-Bin-Private': 'false'
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.metadata?.id) { toast('☁️ 클라우드 저장 완료!'); return data.metadata.id; }
     }
-    toast('☁️ Notion 저장 완료');
-  } catch(e) { toast('⚠️ Notion 저장 실패 (로컬 저장됨)'); }
+  } catch(e) {
+    console.error(e);
+    toast('⚠️ 클라우드 저장 실패 (로컬엔 저장됨)');
+  }
+  return null;
 }
 
 function addStudent() {
   const name = document.getElementById('new-name').value.trim();
   if (!name) return;
-  const s = { id: 'stu_' + Date.now(), name, sessions: [], pageId: null };
+  const s = { id: 'stu_' + Date.now(), name, sessions: [], binId: null };
   students.unshift(s);
   saveStudents();
   document.getElementById('new-name').value = '';
-  if (cfg.notionKey && cfg.notionDb) syncToNotion(s);
   renderStudents();
   toast(`${name} 추가 ✓`);
 }
@@ -302,13 +261,15 @@ function renderStudents() {
 
   list.innerHTML = students.map(s => {
     const total = s.sessions.reduce((a, b) => a + b.expressions.length, 0);
-    const chips = s.sessions.map(ss => `<span class="session-chip">${ss.date}${ss.name ? ' · ' + ss.name : ''} · ${ss.expressions.length}개</span>`).join('');
+    const chips = s.sessions.map(ss =>
+      `<span class="session-chip">${ss.date}${ss.name?' · '+ss.name:''} · ${ss.expressions.length}개</span>`
+    ).join('');
     return `
     <div class="student-card">
       <div class="student-head">
         <div>
           <div class="student-name">${s.name}</div>
-          <div class="student-meta">수업 ${s.sessions.length}회 · 총 ${total}개 표현</div>
+          <div class="student-meta">수업 ${s.sessions.length}회 · 총 ${total}개 표현${s.binId?' · ☁️ 클라우드 연결됨':''}</div>
         </div>
         <div class="student-btns">
           <button class="btn btn-teal btn-sm" onclick="toggleForm('${s.id}')">+ 수업 추가</button>
@@ -323,7 +284,8 @@ function renderStudents() {
           <input class="field" id="fd-${s.id}" value="${new Date().toISOString().split('T')[0]}" placeholder="날짜" style="margin-bottom:0" />
           <input class="field" id="fn-${s.id}" placeholder="수업 이름 (선택)" style="margin-bottom:0" />
         </div>
-        <textarea class="field" id="ft-${s.id}" placeholder="저는 날씨에 영향을 많이 받는 사람이에요.&#10;I'm someone who is very affected by the weather.&#10;나는 벼랑끝에 서있는 느낌이야.&#10;I feel like I'm standing on the edge of a cliff."></textarea>
+        <textarea class="field" id="ft-${s.id}"
+          placeholder="저는 날씨에 영향을 많이 받는 사람이에요.&#10;I'm someone who is very affected by the weather.&#10;나는 벼랑끝에 서있는 느낌이야.&#10;I feel like I'm standing on the edge of a cliff."></textarea>
         <div style="display:flex;gap:8px;align-items:center">
           <button class="btn btn-dark btn-sm" onclick="saveSession('${s.id}')">저장</button>
           <button class="btn btn-outline btn-sm" onclick="toggleForm('${s.id}')">닫기</button>
@@ -372,10 +334,17 @@ async function saveSession(id) {
   const name = document.getElementById(`fn-${id}`).value.trim();
   const exprs = parseExprs(text);
   if (exprs.length === 0) { alert('표현을 인식하지 못했어요.\n한국어 다음 줄에 영어 형식인지 확인해주세요.'); return; }
+
   const s = students.find(s => s.id === id);
   s.sessions.unshift({ id: 'sess_' + Date.now(), date, name, expressions: exprs });
   saveStudents();
-  if (cfg.notionKey && cfg.notionDb) await syncToNotion(s);
+
+  // Save to JSONBin
+  if (cfg.jbKey) {
+    const binId = await jbSave(s);
+    if (binId) { s.binId = binId; saveStudents(); }
+  }
+
   document.getElementById(`form-${id}`).classList.remove('open');
   document.getElementById(`ft-${id}`).value = '';
   renderStudents();
@@ -385,9 +354,18 @@ async function saveSession(id) {
 function genLink(id) {
   const s = students.find(s => s.id === id);
   const base = (cfg.studentUrl || 'student_review.html').replace(/\/$/, '');
-  const payload = { name: s.name, sessions: s.sessions };
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  const url = `${base}?data=${encoded}`;
+  let url = '';
+
+  if (s.binId) {
+    // Short clean link using bin ID
+    url = `${base}?student=${encodeURIComponent(s.name)}&bin=${s.binId}`;
+  } else {
+    // Fallback: encode data in URL
+    const payload = { name: s.name, sessions: s.sessions };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    url = `${base}?data=${encoded}`;
+  }
+
   document.getElementById(`lu-${id}`).textContent = url;
   document.getElementById(`lb-${id}`).classList.add('open');
   document.getElementById(`form-${id}`).classList.remove('open');
