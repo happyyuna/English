@@ -203,26 +203,27 @@ function saveSettings() {
 async function jbSave(student) {
   if (!cfg.jbKey) return null;
   try {
+    const key = cfg.jbKey.trim().replace(/[^\x00-\x7F]/g, '');
     const payload = { name: student.name, sessions: student.sessions };
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('X-Master-Key', key);
+
     if (student.binId) {
-      // Update existing bin
+      headers.append('X-Bin-Meta', 'false');
       const res = await fetch(`https://api.jsonbin.io/v3/b/${student.binId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': cfg.jbKey },
+        headers,
         body: JSON.stringify(payload)
       });
       const data = await res.json();
-      if (data.metadata) { toast('☁️ 클라우드 저장 완료!'); return student.binId; }
+      if (data.record || res.ok) { toast('☁️ 클라우드 저장 완료!'); return student.binId; }
     } else {
-      // Create new bin
+      headers.append('X-Bin-Name', 'DailyEnglish_' + student.name.replace(/[^\x00-\x7F]/g, ''));
+      headers.append('X-Bin-Private', 'false');
       const res = await fetch('https://api.jsonbin.io/v3/b', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': cfg.jbKey,
-          'X-Bin-Name': `DailyEnglish_${student.name}`,
-          'X-Bin-Private': 'false'
-        },
+        headers,
         body: JSON.stringify(payload)
       });
       const data = await res.json();
