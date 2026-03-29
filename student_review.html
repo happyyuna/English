@@ -398,9 +398,7 @@ async function load() {
     const binId = params.get('bin');
     const raw = params.get('data');
     if (binId) {
-      const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-        headers: { 'X-Bin-Meta': 'false' }
-      });
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`);
       const json = await res.json();
       data = json.record || json;
     } else if (raw) {
