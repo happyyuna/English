@@ -256,9 +256,10 @@ function deleteStudent(id) {
 
 function renderStudents() {
   const list = document.getElementById('student-list');
-  const empty = document.getElementById('empty-state');
-  if (students.length === 0) { list.innerHTML = ''; list.appendChild(empty); empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
+  if (students.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">👤</div>아직 학생이 없어요.<br>위에서 추가해보세요!</div>';
+    return;
+  }
 
   list.innerHTML = students.map(s => {
     const total = s.sessions.reduce((a, b) => a + b.expressions.length, 0);
