@@ -186,7 +186,8 @@ async function load() {
       const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
         headers: { 'X-Bin-Meta': 'false' }
       });
-      data = await res.json();
+      const json = await res.json();
+      data = json.record || json;
     } else if (raw) {
       // Load from URL encoded data
       data = JSON.parse(decodeURIComponent(escape(atob(raw))));
