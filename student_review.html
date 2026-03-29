@@ -23,31 +23,13 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-header {
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 14px 20px; display: flex; align-items: center; gap: 10px;
-  position: sticky; top: 0; z-index: 100;
-}
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; }
 .logo { font-family: 'Lora', serif; font-size: 1rem; color: var(--gold); }
 .logo span { font-style: italic; }
-.student-pill {
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--muted); padding: 4px 12px; border-radius: 20px; margin-left: auto;
-}
+.student-pill { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 4px 12px; border-radius: 20px; margin-left: auto; }
 
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--surface); border-top: 1px solid var(--border);
-  display: flex; z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.bnav {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 10px 4px; cursor: pointer; background: none; border: none;
-  color: var(--muted); transition: color 0.15s;
-  font-family: 'Noto Sans KR', sans-serif;
-}
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+.bnav { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px; cursor: pointer; background: none; border: none; color: var(--muted); transition: color 0.15s; font-family: 'Noto Sans KR', sans-serif; }
 .bnav.active { color: var(--gold); }
 .bnav-icon { font-size: 1.25rem; }
 .bnav-label { font-size: 0.62rem; }
@@ -56,77 +38,40 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
 .panel { display: none; }
 .panel.active { display: block; }
 
-/* SESSION PILLS */
-.pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
-.pill {
-  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
-  background: transparent; color: var(--muted); cursor: pointer;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-  transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
-}
+.pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.pill { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; transition: all 0.15s; white-space: nowrap; }
 .pill.active { background: var(--gold); color: #111; border-color: var(--gold); }
 
-/* PLAY BAR */
-.play-bar {
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 12px 16px;
-  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
-}
+.play-bar { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .play-bar-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--muted); flex: 1; }
 .prog-wrap { flex: 2; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
 .prog-fill { height: 100%; background: var(--teal); width: 0%; transition: width 0.3s; }
 
-.btn {
-  padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 500;
-  transition: all 0.15s; white-space: nowrap;
-}
+.btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
 .btn-teal { background: var(--teal); color: #111; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
 .btn-gold { background: var(--gold); color: #111; }
 .btn-sm { padding: 6px 12px; font-size: 0.68rem; }
 
-/* EXPR CARDS */
 .expr-list { display: flex; flex-direction: column; gap: 10px; }
-.expr-card {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 16px;
-  transition: border-color 0.2s;
-}
+.expr-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px; transition: border-color 0.2s; }
 .expr-card.playing { border-color: var(--teal); }
 .expr-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-bottom: 6px; }
 .expr-ko { font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; line-height: 1.65; }
 .expr-en { font-family: 'Lora', serif; font-size: 1rem; color: var(--text); line-height: 1.65; margin-bottom: 12px; }
 .speed-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-.spd {
-  padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);
-  background: transparent; color: var(--muted); cursor: pointer;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-  transition: all 0.15s; -webkit-appearance: none;
-}
+.spd { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; transition: all 0.15s; -webkit-appearance: none; }
 .spd:active { transform: scale(0.95); }
 .spd.on { background: var(--teal); color: #111; border-color: var(--teal); }
 
-/* QUIZ */
-.quiz-setup {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 28px 20px; text-align: center; margin-bottom: 16px;
-}
+.quiz-setup { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; text-align: center; margin-bottom: 16px; }
 .quiz-setup h2 { font-family: 'Lora', serif; color: var(--gold); margin-bottom: 8px; }
 .quiz-setup p { font-size: 0.84rem; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
 .qtype-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
-.qtype-btn {
-  padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
-  background: transparent; color: var(--muted); cursor: pointer;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; transition: all 0.15s;
-}
+.qtype-btn { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; transition: all 0.15s; }
 .qtype-btn.active { background: var(--gold); color: #111; border-color: var(--gold); }
 
-.quiz-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 22px 18px;
-  animation: fadeUp 0.25s ease;
-}
+.quiz-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 18px; animation: fadeUp 0.25s ease; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 .quiz-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .quiz-num-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--muted); }
@@ -134,20 +79,10 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
 .qdot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
 .qdot.done { background: var(--green); }
 .qdot.cur { background: var(--gold); }
-.qtypelbl {
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.8px;
-  background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
-  padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px;
-}
+.qtypelbl { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.8px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
 .quiz-q { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--text); line-height: 1.65; margin-bottom: 6px; }
 .answers { display: flex; flex-direction: column; gap: 8px; margin: 16px 0 10px; }
-.ans-btn {
-  padding: 13px 14px; background: var(--surface2);
-  border: 1.5px solid var(--border); border-radius: 8px;
-  cursor: pointer; font-family: 'Lora', serif; font-size: 0.88rem;
-  color: var(--text); text-align: left; line-height: 1.5;
-  transition: all 0.15s; width: 100%; -webkit-appearance: none;
-}
+.ans-btn { padding: 13px 14px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-family: 'Lora', serif; font-size: 0.88rem; color: var(--text); text-align: left; line-height: 1.5; transition: all 0.15s; width: 100%; -webkit-appearance: none; }
 .ans-btn:active:not(:disabled) { transform: scale(0.98); }
 .ans-btn.correct { border-color: var(--green); background: rgba(81,207,102,0.12); color: var(--green); }
 .ans-btn.wrong { border-color: var(--coral); background: rgba(255,107,107,0.12); color: var(--coral); }
@@ -158,20 +93,11 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
 .qfeedback.wrong { background: rgba(255,107,107,0.1); border: 1px solid var(--coral); color: var(--coral); }
 .next-wrap { margin-top: 14px; display: none; }
 
-.result-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 36px 20px; text-align: center;
-  animation: fadeUp 0.3s ease;
-}
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 20px; text-align: center; animation: fadeUp 0.3s ease; }
 .res-stars { font-size: 2rem; margin-bottom: 10px; }
 .res-score { font-family: 'Lora', serif; font-size: 3rem; color: var(--gold); }
 .res-msg { font-size: 0.9rem; color: var(--muted); margin: 10px 0 20px; }
-.streak-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  color: #111; padding: 7px 18px; border-radius: 20px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500; margin-bottom: 20px;
-}
+.streak-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #111; padding: 7px 18px; border-radius: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 500; margin-bottom: 20px; }
 
 .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; }
 .dots { display: flex; gap: 6px; }
@@ -194,7 +120,6 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
     <div class="dots-label">표현을 불러오고 있어요...</div>
   </div>
 
-  <!-- LEARN -->
   <div class="panel" id="panel-learn">
     <div class="pills" id="sess-pills"></div>
     <div class="play-bar">
@@ -206,7 +131,6 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
     <div class="expr-list" id="expr-list"></div>
   </div>
 
-  <!-- QUIZ -->
   <div class="panel" id="panel-quiz">
     <div id="quiz-setup-wrap">
       <div class="quiz-setup">
@@ -246,24 +170,27 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
 
 <script>
 const params = new URLSearchParams(location.search);
-let data = null; // { name, sessions }
+let data = null;
 let curSessIdx = 0;
 let qType = 'ko2en';
 let qQs = [], qIdx = 0, qScore = 0;
 let playActive = false;
 
-const sName = data?.name || params.get('student') || '학생';
-let stats = JSON.parse(localStorage.getItem(`ders_${sName}`) || '{"streak":0,"lastDate":""}');
-function saveStats() { localStorage.setItem(`ders_${sName}`, JSON.stringify(stats)); }
-
-// ── LOAD ─────────────────────────────────────────────
 async function load() {
   try {
+    const binId = params.get('bin');
     const raw = params.get('data');
-    if (raw) {
+
+    if (binId) {
+      // Load from JSONBin
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+        headers: { 'X-Bin-Meta': 'false' }
+      });
+      data = await res.json();
+    } else if (raw) {
+      // Load from URL encoded data
       data = JSON.parse(decodeURIComponent(escape(atob(raw))));
     } else {
-      // No data in URL — show error
       throw new Error('no data');
     }
     init();
@@ -281,14 +208,17 @@ function init() {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('stu-pill').textContent = data.name;
   document.getElementById('panel-learn').classList.add('active');
-  renderPills();
-  renderExprs(0);
-  updateQuizDesc();
-  renderStreakBadge();
+  renderPills(); renderExprs(0); updateQuizDesc(); renderStreakBadge();
   window.speechSynthesis.getVoices();
 }
 
-// ── TABS ─────────────────────────────────────────────
+let stats = {};
+function loadStats() {
+  if (!data) return;
+  stats = JSON.parse(localStorage.getItem(`ders_${data.name}`) || '{"streak":0,"lastDate":""}');
+}
+function saveStats() { localStorage.setItem(`ders_${data.name}`, JSON.stringify(stats)); }
+
 function switchTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav').forEach(b => b.classList.remove('active'));
@@ -296,7 +226,6 @@ function switchTab(name, el) {
   el.classList.add('active');
 }
 
-// ── LEARN ─────────────────────────────────────────────
 function renderPills() {
   document.getElementById('sess-pills').innerHTML = data.sessions.map((s, i) =>
     `<button class="pill ${i===0?'active':''}" onclick="selSess(${i},this)">${s.date}${s.name?' · '+s.name:''}</button>`
@@ -325,7 +254,6 @@ function renderExprs(i) {
     </div>`).join('');
 }
 
-// ── TTS ──────────────────────────────────────────────
 function getVoice() {
   const vs = window.speechSynthesis.getVoices();
   return vs.find(v => v.lang==='en-US' && v.name.includes('Samantha'))
@@ -335,8 +263,7 @@ function getVoice() {
 
 function speak(idx, rate, btn) {
   window.speechSynthesis.cancel();
-  const sess = data.sessions[curSessIdx];
-  const text = sess.expressions[idx].en;
+  const text = data.sessions[curSessIdx].expressions[idx].en;
   document.querySelectorAll('.expr-card').forEach(c => c.classList.remove('playing'));
   document.querySelectorAll('.spd').forEach(b => b.classList.remove('on'));
   document.getElementById('ec-' + idx)?.classList.add('playing');
@@ -375,11 +302,9 @@ function stopAll() {
 }
 function setProgress(r) { document.getElementById('prog').style.width = (r * 100) + '%'; }
 
-// ── QUIZ ─────────────────────────────────────────────
 function allExprs() { return data.sessions.flatMap(s => s.expressions); }
 function updateQuizDesc() {
-  const n = allExprs().length;
-  document.getElementById('quiz-desc').textContent = `총 ${n}개 표현으로 퀴즈를 풀어보세요!`;
+  document.getElementById('quiz-desc').textContent = `총 ${allExprs().length}개 표현으로 퀴즈를 풀어보세요!`;
 }
 function setQT(btn, type) {
   qType = type;
@@ -387,6 +312,7 @@ function setQT(btn, type) {
   btn.classList.add('active');
 }
 function renderStreakBadge() {
+  loadStats();
   const el = document.getElementById('streak-wrap');
   el.innerHTML = stats.streak > 1 ? `<div class="streak-badge">🔥 ${stats.streak}일 연속 복습 중!</div>` : '';
 }
@@ -464,6 +390,7 @@ function showResult() {
   const stars = pct===100?'⭐⭐⭐':pct>=70?'⭐⭐':'⭐';
   const msg = pct===100?'완벽해요! 🎉':pct>=70?'잘했어요! 조금만 더!':'다시 복습해봐요!';
   const today = new Date().toISOString().split('T')[0];
+  loadStats();
   if (stats.lastDate !== today) {
     const prev = new Date(Date.now()-86400000).toISOString().split('T')[0];
     stats.streak = stats.lastDate===prev ? stats.streak+1 : 1;
