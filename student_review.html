@@ -551,9 +551,27 @@ function renderStreak() {
 function shuffleArray(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function makeWordChips(sentence) {
-  // Split into words, keep punctuation attached
-  const words = sentence.match(/[\w'']+[.,!?]?|[.,!?]/g) || sentence.split(' ');
-  return shuffleArray(words);
+  // Split into chunks: keep contractions together, group into 1-3 word chunks
+  const words = sentence.split(' ');
+  const chunks = [];
+  let i = 0;
+  while (i < words.length) {
+    // Always keep contractions (I'm, don't, it's etc) with next word if short
+    const w = words[i];
+    const hasApostrophe = w.includes("'") || w.includes("’");
+    if (hasApostrophe && i + 1 < words.length) {
+      chunks.push(w + " " + words[i+1]);
+      i += 2;
+    } else if (w.length <= 3 && i + 1 < words.length && words[i+1].length <= 5) {
+      // Group short words together (I, a, the, in, on...)
+      chunks.push(w + " " + words[i+1]);
+      i += 2;
+    } else {
+      chunks.push(w);
+      i++;
+    }
+  }
+  return shuffleArray(chunks);
 }
 
 function startQuiz() {
@@ -738,24 +756,4 @@ function showResult() {
           <div class="streak-icon">🔥</div>
           <div>
             <div class="streak-text">${stats.streak}일 연속!</div>
-            <div class="streak-sub">꾸준함이 실력이에요 💪</div>
-          </div>
-        </div>`:''}
-      <div class="result-btns">
-        <button class="btn btn-blue" onclick="startQuiz()">다시 풀기</button>
-        <button class="btn btn-outline" onclick="backSetup()">설정으로</button>
-      </div>
-    </div>`;
-}
-
-function backSetup() {
-  document.getElementById('quiz-end').style.display = 'none';
-  document.getElementById('quiz-setup-wrap').style.display = 'block';
-  renderStreak();
-}
-
-window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-load();
-</script>
-</body>
-</html>
+            <div class="st
