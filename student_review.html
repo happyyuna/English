@@ -307,6 +307,39 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
 .result-msg { font-size: 0.95rem; color: var(--muted); margin: 12px 0 20px; font-weight: 600; }
 .result-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
+
+/* HISTORY */
+.history-list { display: flex; flex-direction: column; gap: 12px; }
+.history-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px;
+  box-shadow: var(--shadow); cursor: pointer; transition: all 0.15s;
+}
+.history-card:active { transform: scale(0.98); }
+.history-card.open { border-color: var(--blue); }
+.history-date {
+  font-size: 0.72rem; font-weight: 700; color: var(--blue);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.history-preview { font-size: 0.88rem; color: var(--muted); font-weight: 600; }
+.history-count {
+  display: inline-block; background: var(--blue-light); color: var(--blue);
+  font-size: 0.7rem; font-weight: 700; padding: 2px 10px;
+  border-radius: 20px; margin-top: 6px;
+}
+.history-exprs { display: none; margin-top: 14px; }
+.history-exprs.open { display: block; }
+.history-expr-item {
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.history-expr-item:last-child { border-bottom: none; padding-bottom: 0; }
+.history-expr-ko { font-size: 0.82rem; color: var(--muted); margin-bottom: 6px; line-height: 1.6; }
+.history-expr-en {
+  font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700;
+  color: var(--text); line-height: 1.6; margin-bottom: 8px;
+}
+.history-spd-btns { display: flex; gap: 6px; }
+
 /* LOADING */
 .loading-screen {
   display: flex; flex-direction: column; align-items: center;
@@ -372,6 +405,13 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
     <div id="quiz-play" style="display:none"></div>
     <div id="quiz-end" style="display:none"></div>
   </div>
+
+  <!-- HISTORY -->
+  <div class="panel" id="panel-history">
+    <div style="font-size:1.1rem;font-weight:800;margin-bottom:4px">수업 기록</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px;font-weight:600">날짜별로 표현을 다시 복습해보세요!</div>
+    <div class="history-list" id="history-list"></div>
+  </div>
 </main>
 
 <div class="bottom-nav">
@@ -380,6 +420,9 @@ main { max-width: 600px; margin: 0 auto; padding: 20px 16px 90px; }
   </button>
   <button class="bnav" onclick="switchTab('quiz',this)">
     <div class="bnav-icon">✏️</div><div class="bnav-label">퀴즈</div>
+  </button>
+  <button class="bnav" onclick="switchTab('history',this)">
+    <div class="bnav-icon">📅</div><div class="bnav-label">수업기록</div>
   </button>
 </div>
 
@@ -392,6 +435,41 @@ let difficulty = 'easy';
 let qQs = [], qIdx = 0, qScore = 0;
 let answerWords = []; // words placed in answer area
 let wordChips = [];   // all word chips for current question
+
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  if (!data || !data.sessions || data.sessions.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-weight:600">아직 수업 기록이 없어요.</div>';
+    return;
+  }
+  list.innerHTML = data.sessions.map((sess, si) => {
+    const exprs = sess.expressions.map((e, ei) => `
+      <div class="history-expr-item">
+        <div class="history-expr-ko">${e.ko}</div>
+        <div class="history-expr-en">${e.en}</div>
+        <div class="history-spd-btns">
+          <button class="spd" onclick="speakText('${e.en.replace(/'/g,"\'")}', 0.65)">🐢 느리게</button>
+          <button class="spd" onclick="speakText('${e.en.replace(/'/g,"\'")}', 1.0)">▶ 정속도</button>
+          <button class="spd" onclick="speakText('${e.en.replace(/'/g,"\'")}', 1.35)">⚡ 빠르게</button>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="history-card" onclick="toggleHistory(${si})">
+        <div class="history-date">📅 ${sess.date}${sess.name ? ' · ' + sess.name : ''}</div>
+        <div class="history-preview">${sess.expressions[0]?.en?.substring(0, 45) || ''}...</div>
+        <div class="history-count">${sess.expressions.length}개 표현</div>
+        <div class="history-exprs" id="hexprs-${si}">${exprs}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleHistory(si) {
+  const el = document.getElementById('hexprs-' + si);
+  const card = el.closest('.history-card');
+  el.classList.toggle('open');
+  card.classList.toggle('open');
+}
 
 async function load() {
   try {
@@ -436,6 +514,7 @@ function switchTab(name, el) {
   document.querySelectorAll('.bnav').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + name).classList.add('active');
   el.classList.add('active');
+  if (name === 'history') renderHistory();
 }
 
 // ── LEARN ────────────────────────────────────────────
@@ -684,97 +763,4 @@ function resetAnswer() {
   area.classList.remove('has-words', 'correct', 'wrong');
   document.getElementById('answer-placeholder').style.display = 'inline';
   document.getElementById('check-btn').disabled = true;
-  document.getElementById('qfb').className = 'quiz-feedback';
-  document.getElementById('nxt').style.display = 'none';
-}
-
-function checkAnswer() {
-  const q = qQs[qIdx];
-  const userAnswer = answerWords.map(w => w.word).join(' ');
-  const correct = q.en;
-  const isCorrect = userAnswer.toLowerCase().replace(/[.,!?]/g,'').trim() ===
-                    correct.toLowerCase().replace(/[.,!?]/g,'').trim();
-
-  const area = document.getElementById('answer-area');
-  const fb = document.getElementById('qfb');
-
-  // Disable chips and check btn
-  document.querySelectorAll('.word-chip').forEach(c => c.style.pointerEvents = 'none');
-  document.querySelectorAll('.answer-word').forEach(w => w.style.pointerEvents = 'none');
-  document.getElementById('check-btn').disabled = true;
-  document.getElementById('check-btn').style.display = 'none';
-  document.querySelector('.quiz-reset-btn').style.display = 'none';
-
-  if (isCorrect) {
-    qScore++;
-    area.classList.remove('has-words'); area.classList.add('correct');
-    fb.className = 'quiz-feedback show correct';
-    fb.innerHTML = '✓ 정답이에요! 🎉';
-    speakText(correct, 0.9);
-  } else {
-    area.classList.remove('has-words'); area.classList.add('wrong');
-    fb.className = 'quiz-feedback show wrong';
-    fb.innerHTML = `✗ 아쉬워요!<br><strong>정답: ${correct}</strong>`;
-    speakText(correct, 0.85);
-  }
-
-  document.getElementById('nxt').style.display = 'block';
-}
-
-function nextQ() {
-  qIdx++;
-  if (qIdx >= qQs.length) showResult();
-  else renderWordOrderQ();
-}
-
-function showResult() {
-  const total = qQs.length;
-  const pct = Math.round((qScore / total) * 100);
-  const emoji = pct===100?'🏆':pct>=70?'🎉':pct>=50?'😊':'💪';
-  const msg = pct===100?'완벽해요! 모두 맞혔어요!':pct>=70?'잘했어요! 조금만 더 연습해요.':pct>=50?'절반 이상 맞혔어요!':'다시 한번 도전해봐요!';
-
-  // Update streak
-  loadStats();
-  const today = new Date().toISOString().split('T')[0];
-  if (stats.lastDate !== today) {
-    const prev = new Date(Date.now()-86400000).toISOString().split('T')[0];
-    stats.streak = stats.lastDate===prev ? stats.streak+1 : 1;
-    stats.lastDate = today;
-    stats.total = (stats.total || 0) + qScore;
-    saveStats();
-  }
-
-  document.getElementById('quiz-play').style.display = 'none';
-  document.getElementById('quiz-end').style.display = 'block';
-  document.getElementById('quiz-end').innerHTML = `
-    <div class="result-card">
-      <div class="result-emoji">${emoji}</div>
-      <div class="result-score">${qScore}<span class="result-total">/${total}</span></div>
-      <div style="font-size:0.8rem;color:var(--muted);margin:4px 0 8px;font-weight:600">${pct}% 정답</div>
-      <div class="result-msg">${msg}</div>
-      ${stats.streak>1?`
-        <div class="streak-card" style="margin:0 auto 20px;max-width:240px">
-          <div class="streak-icon">🔥</div>
-          <div>
-            <div class="streak-text">${stats.streak}일 연속!</div>
-            <div class="streak-sub">꾸준함이 실력이에요 💪</div>
-          </div>
-        </div>`:''}
-      <div class="result-btns">
-        <button class="btn btn-blue" onclick="startQuiz()">다시 풀기</button>
-        <button class="btn btn-outline" onclick="backSetup()">설정으로</button>
-      </div>
-    </div>`;
-}
-
-function backSetup() {
-  document.getElementById('quiz-end').style.display = 'none';
-  document.getElementById('quiz-setup-wrap').style.display = 'block';
-  renderStreak();
-}
-
-window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-load();
-</script>
-</body>
-</html>
+  document.getElementById('qfb').className = 'q
