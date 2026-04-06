@@ -523,19 +523,41 @@ function shuffleArray(arr) { return arr.slice().sort(function() { return Math.ra
 function makeWordChips(sentence) {
   // Normalize apostrophes
   var norm = sentence.replace(/[\u2018\u2019\u02BC]/g, "'");
-  // Split by spaces
   var words = norm.split(' ');
+
+  // Words that should attach to the NEXT word (prepositions, articles, conjunctions, etc.)
+  var attachNext = ['a','an','the','my','your','his','her','our','their','its',
+    'in','on','at','to','for','of','with','by','from','about','into','onto',
+    'so','but','and','or','because','when','if','that','as','after','before',
+    'not','very','just','also','still','already','yet','even','only','both',
+    'I','we','you','he','she','they','it'];
+
   var chunks = [];
   var i = 0;
   while (i < words.length) {
     var w = words[i];
-    var bare = w.replace(/[.,!?]/g, '');
-    var isShort = bare.length <= 3;
-    var hasContraction = bare.indexOf("'") !== -1;
+    var bare = w.replace(/[.,!?]/g, '').toLowerCase();
+    var hasContraction = w.indexOf("'") !== -1;
+    var isAttachNext = attachNext.indexOf(bare) !== -1;
     var nextExists = i + 1 < words.length;
-    if ((isShort || hasContraction) && nextExists) {
+    var nextNextExists = i + 2 < words.length;
+
+    if (hasContraction && nextExists) {
+      // Contraction: attach to next word
       chunks.push(w + ' ' + words[i + 1]);
       i += 2;
+    } else if (isAttachNext && nextExists) {
+      // Article/preposition/conjunction: attach to next 1-2 words
+      var chunk = w + ' ' + words[i + 1];
+      var nextBare = words[i + 1].replace(/[.,!?]/g, '').toLowerCase();
+      // If next word is also short/article, grab one more
+      if (attachNext.indexOf(nextBare) !== -1 && nextNextExists) {
+        chunk += ' ' + words[i + 2];
+        i += 3;
+      } else {
+        i += 2;
+      }
+      chunks.push(chunk);
     } else {
       chunks.push(w);
       i++;
@@ -696,25 +718,4 @@ function showResult() {
   document.getElementById('quiz-end').innerHTML =
     '<div class="result-card">' +
       '<div class="result-emoji">' + emoji + '</div>' +
-      '<div class="result-score">' + qScore + '<span class="result-total">/' + total + '</span></div>' +
-      '<div style="font-size:0.8rem;color:var(--muted);margin:4px 0 8px;font-weight:600">' + pct + '% 정답</div>' +
-      '<div class="result-msg">' + msg + '</div>' +
-      (stats.streak>1?'<div class="streak-card" style="margin:0 auto 20px;max-width:240px"><div class="streak-icon">🔥</div><div><div class="streak-text">' + stats.streak + '일 연속!</div><div class="streak-sub">꾸준함이 실력이에요 💪</div></div></div>':'') +
-      '<div class="result-btns">' +
-        '<button class="btn btn-blue" onclick="startQuiz()">다시 풀기</button>' +
-        '<button class="btn btn-outline" onclick="backSetup()">설정으로</button>' +
-      '</div>' +
-    '</div>';
-}
-
-function backSetup() {
-  document.getElementById('quiz-end').style.display = 'none';
-  document.getElementById('quiz-setup-wrap').style.display = 'block';
-  renderStreak();
-}
-
-window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
-load();
-</script>
-</body>
-</html>
+      '<div class="result-score">' + qScore
