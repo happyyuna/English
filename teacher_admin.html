@@ -382,7 +382,7 @@ function copyLink(id) {
 function copyKakao(id) {
   const s = students.find(s => s.id === id);
   const url = document.getElementById(`lu-${id}`).textContent;
-  const msg = `안녕하세요 ${s.name}님! 😊\n오늘 수업 복습 링크 보내드려요 📚\n\n${url}\n\n매일 5분씩 퀴즈 풀어보세요! 🎯`;
+  const msg = `Hey ${s.name}! 😊\nHere's the link to review today's expressions 📚\n\n${url}\n\nTry to spend just 5 minutes on the quiz each day — it really adds up! 🎯`;
   navigator.clipboard.writeText(msg).then(() => toast('카톡 메시지 복사됨 💬'));
 }
 
