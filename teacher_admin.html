@@ -164,6 +164,21 @@ textarea.field { min-height: 170px; resize: vertical; line-height: 1.75; }
       <button class="btn btn-dark" onclick="saveSettings()" style="width:100%;margin-top:4px">저장</button>
       <div id="save-msg" style="margin-top:10px"></div>
     </div>
+
+    <div class="card">
+      <div class="card-title">🔄 학생 데이터 복구</div>
+      <div class="card-sub">브라우저 데이터가 지워졌을 때, 학생 이름과 JSONBin ID를 입력하면 복구돼요.</div>
+      <div id="restore-list">
+        <div class="restore-row" style="display:flex;gap:8px;margin-bottom:8px">
+          <input class="field" placeholder="학생 이름" style="margin-bottom:0;flex:1" />
+          <input class="field field-mono" placeholder="bin ID (예: 69ce436f...)" style="margin-bottom:0;flex:2" />
+          <button class="btn btn-outline btn-sm" onclick="removeRestoreRow(this)" style="flex-shrink:0">✕</button>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="addRestoreRow()" style="margin-bottom:12px;margin-top:4px">+ 학생 추가</button><br>
+      <button class="btn btn-dark" onclick="restoreStudents()" style="width:100%">복구하기</button>
+      <div id="restore-msg" style="margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;"></div>
+    </div>
   </div>
 
 </div>
@@ -384,6 +399,49 @@ function copyKakao(id) {
   const url = document.getElementById(`lu-${id}`).textContent;
   const msg = `Hey ${s.name}! 😊\nHere's the link to review today's expressions 📚\n\n${url}\n\nTry to spend just 5 minutes on the quiz each day — it really adds up! 🎯`;
   navigator.clipboard.writeText(msg).then(() => toast('카톡 메시지 복사됨 💬'));
+}
+
+function addRestoreRow() {
+  const list = document.getElementById('restore-list');
+  const row = document.createElement('div');
+  row.className = 'restore-row';
+  row.style = 'display:flex;gap:8px;margin-bottom:8px';
+  row.innerHTML = '<input class="field" placeholder="학생 이름" style="margin-bottom:0;flex:1" />' +
+    '<input class="field field-mono" placeholder="bin ID (예: 69ce436f...)" style="margin-bottom:0;flex:2" />' +
+    '<button class="btn btn-outline btn-sm" onclick="removeRestoreRow(this)" style="flex-shrink:0">✕</button>';
+  list.appendChild(row);
+}
+
+function removeRestoreRow(btn) {
+  const rows = document.querySelectorAll('.restore-row');
+  if (rows.length > 1) btn.closest('.restore-row').remove();
+}
+
+function restoreStudents() {
+  const rows = document.querySelectorAll('.restore-row');
+  let added = 0;
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const name = inputs[0].value.trim();
+    const binId = inputs[1].value.trim();
+    if (!name || !binId) return;
+    // Check if already exists
+    const exists = students.find(s => s.binId === binId);
+    if (!exists) {
+      students.unshift({ id: 'stu_' + Date.now() + Math.random(), name, sessions: [], binId });
+      added++;
+    }
+  });
+  saveStudents();
+  renderStudents();
+  const msg = document.getElementById('restore-msg');
+  if (added > 0) {
+    msg.innerHTML = '<span style="color:var(--green)">✓ ' + added + '명 복구됐어요!</span>';
+    switchTab('students', document.querySelectorAll('.nav-tab')[0]);
+  } else {
+    msg.innerHTML = '<span style="color:var(--muted)">이미 등록된 학생이에요.</span>';
+  }
+  setTimeout(() => msg.innerHTML = '', 3000);
 }
 
 function toast(msg) {
